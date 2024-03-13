@@ -1,6 +1,8 @@
 'use client'
 
+import Button from '@/Button'
 import React, { useCallback, useEffect, useState } from 'react'
+import { IoMdClose } from 'react-icons/io'
 interface Props {
   isOpen?: boolean
   onClose: () => void
@@ -8,10 +10,10 @@ interface Props {
   title?: string
   body?: React.ReactElement
   footer?: React.ReactElement
-  actionLabel?: string
-  disable?: boolean
+  actionLabel: string
+  disabled?: boolean
   secondaryAction?: () => void
-  secondaryLabel?: string
+  secondaryActionLabel?: string
 }
 export default function Modal({
   isOpen,
@@ -21,33 +23,70 @@ export default function Modal({
   body,
   footer,
   actionLabel,
-  disable,
+  disabled,
   secondaryAction,
-  secondaryLabel
+  secondaryActionLabel
 }: Props) {
   const [showModal, setShowModal] = useState(isOpen)
   useEffect(() => {
     setShowModal(isOpen)
   }, [isOpen])
 
-  const handleClose = useCallback(() => {
-    if (disable) {
+  const handleSubmit = useCallback(() => {
+    if (disabled) {
       return
     }
     setShowModal(false)
     setTimeout(() => {
-      onClose()
+    onClose()
     }, 300)
-  }, [disable, onClose])
+  }, [disabled, onClose])
 
   const handleSecondaryAction = useCallback(() => {
-    if (disable || !secondaryAction) {
+    if (disabled || !secondaryAction) {
       return
     }
     secondaryAction()
-  }, [disable, secondaryAction])
-  if(!null){
+  }, [disabled, secondaryAction])
+  if (!isOpen) {
     return null
   }
-  return <div>Modal</div>
+  return (
+    <>
+      <div className='justify-center items-center flex overflow-hidden overflow-y-auto fixed inset-0 outline-none focus:outline-none bg-neutral-800/70'>
+        <div className='relative w-full md:w-4/6 lg:w-3/6 xl:w-2/5 my-6 mx-auto h-full lg:h-auto md:h-auto'>
+          {/*content*/}
+          <div
+            className={`translate duration-300 h-full 
+            ${showModal ? `translate-y-0  ` : `translate-y-full`} 
+            ${showModal ? `opacity-100` : `opacity-0`}
+            `}
+          >
+            {' '}
+            <div className='bg-white translate h-full lg:h-auto md:h-auto border-0 rounded-lg shadow-lg relative flex flex-col outlien-none focus:outline-none'>
+              {/*header*/}
+              <div className='flex items-center p-6 rounded-t justify-center relative border-b-[1px]'>
+                <button className='p-1 border-0 hover:opacity-70 transition absolute left-9' onClick={() => onClose()}>
+                  <IoMdClose size={18} className='text-lg font-semibold' />
+                </button>
+                <div className='text-lg font-semibold'>{title}</div>
+              </div>
+              {/*body*/}
+              <div className='relative flex-auto p-6'>{body}</div>
+              {/*  footer */}
+              <div className='flex flex-col gap-2 p-6'>
+                <div className='flex flex-row items-center gap-4 w-full'>
+                  {secondaryAction && secondaryActionLabel && (
+                    <Button outline label={secondaryActionLabel} onClick={handleSecondaryAction} />
+                  )}
+                  <Button disabled={disabled} label={actionLabel} onClick={handleSubmit} />
+                </div>
+                {footer}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
 }

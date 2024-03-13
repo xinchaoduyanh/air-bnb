@@ -5,6 +5,8 @@ import './globals.css'
 import Navbar from '@/Components/Navbar/Navbar'
 import UseCilentOnly from '@/Components/ClientOnly'
 import ClientOnly from '@/Components/ClientOnly'
+import Modal from '@/Components/Modal/Modal'
+import RegisterModal from '@/Components/Modal/RegisterModal'
 
 const font = Nunito({ subsets: ['latin'] })
 export const metadata: Metadata = {
@@ -17,6 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang='en'>
       <body className={font.className}>
         <ClientOnly>
+          <RegisterModal />
           <Navbar />
         </ClientOnly>
         {children}

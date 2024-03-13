@@ -1,13 +1,16 @@
 "use client"
 
 interface Props {
-  onclick: () => void
+  onClick: () => void
   label: string
 }
 
 export default function MenuItem(children: Props) {
+ const handleClick = () => {
+    children.onClick()
+ }
   return (
-    <div className="px-4 py-3 hover:bg-neutral-200 transition font-semibold">{children.label}</div>
+    <div onClick={handleClick} className="px-4 py-3 hover:bg-neutral-200 transition font-semibold">{children.label}</div>
   )
 }
 

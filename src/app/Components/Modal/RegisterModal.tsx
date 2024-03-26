@@ -11,7 +11,7 @@ import Modal from './Modal'
 import Heading from '../Heading'
 import Input from '../inputs/Input'
 import toast from 'react-hot-toast'
-import Button from '@/Button'
+import Button from '@/app/Components/Button'
 
 export default function RegisterModal() {
   const registerModal = useRegisterModal()
@@ -28,28 +28,39 @@ export default function RegisterModal() {
     }
   })
 
-  const onSubmit: SubmitHandler<FieldValues> = useCallback(
-    async (data) => {
-      setIsLoading(true)
-      try {
-        const response = await axios.post('/api/auth/register', data)
-        console.log(response)
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    setIsLoading(true)
+
+    axios
+      .post('/api/auth/register', data)
+      .then(() => {
         setIsLoading(false)
         registerModal.onClose()
-      } catch (error) {
-        console.log(error)
-        toast.error('Something went wrong')
+        toast.success('Account created')
+      })
+      .catch(() => {
         setIsLoading(false)
-      }
-    },
-    [registerModal]
-  )
+        toast.error('An error occurred')
+      })
+      .finally(() => {
+        setIsLoading(false)
+      })
+  }
+
   const bodyContent = (
     <div className='flex flex-col gap-4'>
       <Heading title='Welcome to AirBnb' subtitle='Create an account' center />
-      <Input id='Email' label='Email' register={register} errors={errors} required={true} />
-      <Input id='Name' label='Name' register={register} errors={errors} required={true} />
-      <Input id='Password' label='Password' type='password' register={register} errors={errors} required={true} />
+      <Input id='email' label='Email' disabled={isLoading} register={register} errors={errors} required={true} />
+      <Input id='name' label='Name' disabled={isLoading} register={register} errors={errors} required={true} />
+      <Input
+        id='password'
+        label='Password'
+        disabled={isLoading}
+        type='password'
+        register={register}
+        errors={errors}
+        required={true}
+      />
     </div>
   )
   const footerContent = (

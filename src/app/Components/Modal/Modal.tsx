@@ -1,6 +1,6 @@
 'use client'
 
-import Button from '@/Button'
+import Button from '@/app/Components/Button'
 import React, { useCallback, useEffect, useState } from 'react'
 import { IoMdClose } from 'react-icons/io'
 interface Props {
@@ -32,15 +32,22 @@ export default function Modal({
     setShowModal(isOpen)
   }, [isOpen])
 
-  const handleSubmit = useCallback(() => {
+  const handleClose = useCallback(() => {
     if (disabled) {
       return
     }
     setShowModal(false)
     setTimeout(() => {
-    onClose()
+      onClose()
     }, 300)
   }, [disabled, onClose])
+
+  const handleSubmit = useCallback(() => {
+    if (disabled) {
+      return
+    }
+    onSubmit()
+  }, [disabled, onSubmit])
 
   const handleSecondaryAction = useCallback(() => {
     if (disabled || !secondaryAction) {
@@ -66,7 +73,7 @@ export default function Modal({
             <div className='bg-white translate h-full lg:h-auto md:h-auto border-0 rounded-lg shadow-lg relative flex flex-col outlien-none focus:outline-none'>
               {/*header*/}
               <div className='flex items-center p-6 rounded-t justify-center relative border-b-[1px]'>
-                <button className='p-1 border-0 hover:opacity-70 transition absolute left-9' onClick={() => onClose()}>
+                <button className='p-1 border-0 hover:opacity-70 transition absolute left-9' onClick={handleClose}>
                   <IoMdClose size={18} className='text-lg font-semibold' />
                 </button>
                 <div className='text-lg font-semibold'>{title}</div>
